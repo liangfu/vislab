@@ -2,11 +2,11 @@ function zi=scatteredInterp(x0,y0,v0,xi,yi)
 
 if nargin==0
 x0=[0,1,0,-1];y0=[1,0,-1,0];v0=rand([1,4])
-[xi,yi]=meshgrid(-1:.1:1,-1:.1:1);
+[xi,yi]=meshgrid(-1:.2:1,1:-.2:-1);
 end
 
 par(1).value=1; % prior variance of the clean output
-par(2).value=1.; % inverse scale
+par(2).value=.1; % inverse scale
 par(3).value=1.2; % gamma for the Gamma-Exponential Covariance
 par(4).value=0.01; % jitter
 covfn='covfnGE'; % Gamma-Exponential Covariance Function
@@ -15,7 +15,7 @@ covfn='covfnGE'; % Gamma-Exponential Covariance Function
 
 zi=reshape(zi,size(xi));
 
-%imagesc(reshape(zi,21,[]));
+%imagesc(zi);
 
 function [meantest,vartest,logpygx]=GPreg(xtrain,ytrain,xtest,par,covfn)
 %GPREG Gaussian Process Regression
