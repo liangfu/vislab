@@ -24,7 +24,8 @@ for iter=1:MaxIter
       [min_dist,k_min] = min(dist);
       km = k_min(ceil(length(k_min)*rand)); % one from multiple minima
       class(m)=km;  % an Mx1 vector of code numbers for each sample 
-      membership(m,km)=1; % an MxK matrix showing the membership       codebook_new(km,:) = codebook_new(km,:) + X(m,:);
+      membership(m,km)=1; % an MxK matrix showing the membership       
+      codebook_new(km,:) = codebook_new(km,:) + X(m,:);
       quant_err = quant_err + min_dist;
    end
    for k=1:K
