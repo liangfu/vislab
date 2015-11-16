@@ -1,4 +1,4 @@
-function [pos neg test] = PARSE_data(name)
+function [pos neg test] = PRIMATE_data(name)
 % this function is very dataset specific, you need to modify the code if
 % you want to apply the pose algorithm on some other dataset
 
@@ -23,14 +23,18 @@ catch
   % trainfrs_pos = 1:100; % training frames for positive
   % testfrs_pos = 101:305; % testing frames for positive
   % trainfrs_neg = 615:1832; % training frames for negative 
-  trainfrs_pos = 1:20; % training frames for positive
-  testfrs_pos = 101:105; % testing frames for positive
-  trainfrs_neg = 615:832; % training frames for negative 
+  trainfrs_pos = 1:20;% [16,17,34,39,52,100]; % training frames for positive
+  testfrs_pos = 101:120;%[18,35,40,53,101]; % testing frames for positive
+  trainfrs_neg = 615:632; % training frames for negative 
 
   % -------------------
   % grab positive annotation and image information
-  load PARSE/labels.mat;
-  posims = 'PARSE/im%.4d.jpg';
+  try
+    load([name '/labels.mat']);
+  catch
+    ptsAll=PRIMATE_annotate(name);
+  end
+  posims = [name '/im%.4d.jpg'];
   pos = [];
   numpos = 0;
   for fr = trainfrs_pos
@@ -41,7 +45,7 @@ catch
 
   % -------------------
   % rotate positive images by a small amount of degree
-  degree = [-15 -7.5 7.5 15];
+  degree = [];%-15 -7.5 7.5 15];
   posims_rotate = [cachedir 'imrotate/im%.4d_%d.jpg'];
   for n = 1:length(pos)
     im = imread(pos(n).im);
@@ -84,17 +88,17 @@ catch
   % create ground truth keypoints for model training
   % We augment the original 14 joint positions with midpoints of joints, 
   % defining a total of 26 keypoints
-  I = [1  2  3  4   4   5  6   6   7  8   8   9   9   10 11  11  12 13  13  14 ...
-             15 16  16  17 18  18  19 20  20  21  21  22 23  23  24 25  25  26];
-  J = [14 13 9  9   8   8  8   7   7  9   3   9   3   3  3   2   2  2   1   1 ...
-             10 10  11  11 11  12  12 10  4   10  4   4  4   5   5  5   6   6];
-  A = [1  1  1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1 ...
-             1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1];
-  Trans = full(sparse(I,J,A,26,14));
+  % I = [1  2  3  4   4   5  6   6   7  8   8   9   9   10 11  11  12 13  13  14 ...
+  %            15 16  16  17 18  18  19 20  20  21  21  22 23  23  24 25  25  26];
+  % J = [14 13 9  9   8   8  8   7   7  9   3   9   3   3  3   2   2  2   1   1 ...
+  %            10 10  11  11 11  12  12 10  4   10  4   4  4   5   5  5   6   6];
+  % A = [1  1  1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1 ...
+  %            1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1];
+  % Trans = full(sparse(I,J,A,26,14));
 
-  for n = 1:length(pos)
-    pos(n).point = Trans * pos(n).point; % linear combination
-  end
+  % for n = 1:length(pos)
+  %   pos(n).point = Trans * pos(n).point; % linear combination
+  % end
 
   % -------------------
   % grab neagtive image information
@@ -108,7 +112,7 @@ catch
 
   % -------------------
   % grab testing image information 
-  testims = 'PARSE/im%.4d.jpg';
+  testims = [name '/im%.4d.jpg'];
   test = [];
   numtest = 0;
   for fr = testfrs_pos
