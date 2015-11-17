@@ -11,8 +11,8 @@ K = 4*ones([1,14]);
 % (PRIMATE_data.m) and evaluation (PRIMATE_eval_pcp)
 % pa = [0 1 2 3 4 5 6 3 8 9 10 11 12 13 2 15 16 17 18 15 20 21 22 23 24 25];
 %pa = [1 2 3 4 5 6 7 8 9 10 11 12 13 14];
- pa = [0 1 2 3 4 5 3 3 3  4 10 11 13 14];
-% Spatial resolution of HOG cell, interms of pixel width and hieght
+ pa = [0 1 2 3 4 5 7 7 8  9 10 11 13 13];
+% Spatial resolution of HOG cell, interms of pixel width and height
 % The PRIMATE dataset contains low-res people, so we use low-res parts
 sbin = 4;
 % --------------------
@@ -77,7 +77,7 @@ end
 % visualizemodel(model);
 % figure(2);
 % visualizeskeleton(model);
-demoimid = 7;
+demoimid = 1;
 im = imread(test(demoimid).im);
 %colorset = {'g','g','y','r','r','r','r','y','y','y','m', ...
 %'m','m','m','y','b','b','b','b','y','y','y','c','c','c','c'};
