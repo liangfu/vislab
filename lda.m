@@ -2,7 +2,7 @@ function [W,Prior]=lda(X,Y,D_low)
 
 %% generate data sets
 if nargin<2
-N = [120,40]; % number of samples
+N = [120,80,40]; % number of samples
 K = length(N); % number of classes
 D = 50; % dimension of feature vector
 sigma = rand([K,D]).*1.0;
@@ -45,7 +45,7 @@ Sb=zeros([D D]);
 for i=1:K,Sb=Sb+dat(i).N*(dat(i).mu-mu)'*(dat(i).mu-mu);end
 
 %% eigen decomposition
-[U S V]=svd(inv(Sw)*Sb);size(U)
+[U S V]=svd(inv(Sw)*Sb);%size(U)
 W=U(:,1:D_low)';
 Prior=zeros(K,D_low);
 for i=1:K, Prior(i,:)=dat(i).mu*W'; end
