@@ -95,10 +95,17 @@ catch
   % A = [1  1  1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1 ...
   %            1  1/2 1/2 1  1/2 1/2 1  2/3 1/3 1/3 2/3 1  1/2 1/2 1  1/2 1/2 1];
   % Trans = full(sparse(I,J,A,26,14));
+  I = [1  2  3          4          5                  6          7          8 ...
+             9          10         11                 12         13         14];
+  J = [14 13 9          8          7                  3          2          1 ...
+             10         11         12                 4          5          6];
+  A = [1  1  1          1          1                  1          1          1 ...
+             1          1          1                  1          1          1];
+  Trans = full(sparse(I,J,A,14,14));
 
-  % for n = 1:length(pos)
-  %   pos(n).point = Trans * pos(n).point; % linear combination
-  % end
+  for n = 1:length(pos)
+    pos(n).point = Trans * pos(n).point; % linear combination
+  end
 
   % -------------------
   % grab neagtive image information

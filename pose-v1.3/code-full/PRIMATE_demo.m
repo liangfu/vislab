@@ -11,7 +11,7 @@ K = 4*ones([1,14]);
 % (PRIMATE_data.m) and evaluation (PRIMATE_eval_pcp)
 % pa = [0 1 2 3 4 5 6 3 8 9 10 11 12 13 2 15 16 17 18 15 20 21 22 23 24 25];
 %pa = [1 2 3 4 5 6 7 8 9 10 11 12 13 14];
- pa = [0 1 2 3 4 5 7 7 8  9 10 11 13 13];
+ pa = [0 1 2 3 4 3 6 7 2  9 10  9 12 13];
 % Spatial resolution of HOG cell, interms of pixel width and height
 % The PRIMATE dataset contains low-res people, so we use low-res parts
 sbin = 4;
@@ -77,19 +77,19 @@ end
 % visualizemodel(model);
 % figure(2);
 % visualizeskeleton(model);
-demoimid = 1;
+demoimid = 12;
 im = imread(test(demoimid).im);
 %colorset = {'g','g','y','r','r','r','r','y','y','y','m', ...
 %'m','m','m','y','b','b','b','b','y','y','y','c','c','c','c'};
-colorset={};for ii=1:6,colorset{ii}='r';end;
-for ii=7:12,colorset{ii}='g';end;for ii=13:14,colorset{ii}='k';end
+colorset={};for ii=1:2,colorset{ii}='k';end;
+for ii=[3:5,9:11],colorset{ii}='g';end;for ii=[6:8,12:14],colorset{ii}='b';end
 box = boxes{demoimid};
 % show all detections
 figure(3);
 subplot(1,2,1); showboxes(im,box,colorset);
 subplot(1,2,2); showskeletons(im,box,colorset,model.pa);
 % show best detection overlap with ground truth box
-box = boxes_gtbox{demoimid};
-figure(4);
-subplot(1,2,1); showboxes(im,box,colorset);
-subplot(1,2,2); showskeletons(im,box,colorset,model.pa);
+% box = boxes_gtbox{demoimid};
+% figure(4);
+% subplot(1,2,1); showboxes(im,box,colorset);
+% subplot(1,2,2); showskeletons(im,box,colorset,model.pa);
