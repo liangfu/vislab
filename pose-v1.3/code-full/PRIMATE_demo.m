@@ -25,6 +25,7 @@ pos = point2box(pos,pa);pos
 try
   cls = [name '_final_' num2str(K')'];
   modeldata = load([cachedir cls]);model=modeldata.model;
+  writemodel_xml(model,[cls '.xml']);
 catch
   model = trainmodel(name,pos,neg,K,pa,sbin);
   return
@@ -77,7 +78,7 @@ end
 % visualizemodel(model);
 % figure(2);
 % visualizeskeleton(model);
-demoimid = 12;
+demoimid = 6;
 im = imread(test(demoimid).im);
 %colorset = {'g','g','y','r','r','r','r','y','y','y','m', ...
 %'m','m','m','y','b','b','b','b','y','y','y','c','c','c','c'};
