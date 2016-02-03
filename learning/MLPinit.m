@@ -1,7 +1,21 @@
 function net = MLPinit()
 
 net.alpha=0.002;
-net.maxiter=2000;
+net.maxiter=200;
+
+% hyperbolic - input layer
+net.layer{1} = tanh_layer();
+net.layer{1}.alpha=net.alpha;
+
+% hyperbolic - hidden layer
+% net.layer{2} = tanh_layer();
+% net.layer{2}.alpha=net.alpha;
+
+% logistic - output layer
+net.layer{end+1} = logit_layer();
+net.layer{end}.alpha=net.alpha;
+
+end
 
 % hyperbolic - input/hidden layer
 % - forward:
@@ -12,13 +26,11 @@ net.maxiter=2000;
 %     delta = theta_d .* dE
 % - backward step 2:
 %     w = w + alpha * ( delta * b );
-net.layer{1}.alpha=net.alpha;
-net.layer{1}.forward = @(layer) tanh(layer.w*layer.input);
-net.layer{1}.backward_step1 = @(layer) (1-layer.output.*layer.output).*layer.dE;
-net.layer{1}.backward_step2 = @(layer) layer.w + layer.alpha * (layer.delta * layer.input');
-
-% hyperbolic - hidden layer
-net.layer{2}=net.layer{1};
+function layer = tanh_layer()
+layer.forward = @(layer) tanh(layer.w*layer.input);
+layer.backward_step1 = @(layer) (1-layer.output.*layer.output).*layer.dE;
+layer.backward_step2 = @(layer) layer.w + layer.alpha * (layer.delta * layer.input');
+end
 
 % logistic - output layer
 % - forward:
@@ -29,12 +41,8 @@ net.layer{2}=net.layer{1};
 %     delta = theta_d .* dE
 % - backward step 2:
 %     w = w + alpha * ( delta * b );
-net.layer{end+1}.alpha=net.alpha;
-net.layer{end}.forward = @(layer) 1./(1+exp(-(layer.w*layer.input)));
-net.layer{end}.backward_step1 = @(layer) layer.output.*(1-layer.output).*layer.dE;
-net.layer{end}.backward_step2 = @(layer) layer.w + layer.alpha * (layer.delta * layer.input');
-
+function layer = logit_layer()
+layer.forward = @(layer) 1./(1+exp(-(layer.w*layer.input)));
+layer.backward_step1 = @(layer) layer.output.*(1-layer.output).*layer.dE;
+layer.backward_step2 = @(layer) layer.w + layer.alpha * (layer.delta * layer.input');
 end
-
-
-

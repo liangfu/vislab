@@ -1,42 +1,43 @@
-function net = MLPlearn(X,Y)
-% RNNLEARN - RNN For Binary Classification
+function net = RNNlearn(X,Y)
+% RNNLEARN - RNN for sequence classification
 
 % generate training data sets
 if nargin==0
-N = [120,80]; % number of samples
-K = length(N);   % number of classes
-D = 5;          % dimension of feature vector
-sigma = rand([K,D]).*20.0;
-X=[];Y=[];
-for i=1:K
-  X = [X;randn(N(i),D)+repmat(sigma(i,:),[N(i),1])];  
-  Y = [Y;ones([N(i),1])*(i-1)];
-end
-idx=randperm(size(X,1));
-X=X(idx,:);Y=Y(idx,:);
+sz = [1,1380];I = zeros(sz);
+I(110:220)=rand([1,111])*.1+1;
+X=real(ifft(I));X=X(250:end-251).*1000;
+X=([X;sin(3:2+size(X,2))])';
+Y=zeros(size(X));Y(:,1)=1;
+% subplot(121),plot(X,'-')
+% subplot(122),plot(abs(fft(X)),'-')
 end
 
 C=unique(Y);
 K=length(C);
-D=size(X,2);
+D=30;%size(X,2);
 hsize=round((D+K)*.5); % number of neurons in hidden layer
 alpha=.001;  % learning rate
 maxiter=200; % maximum iteration
 
+pts = unique(randi(size(X,1)-D-1,[1,200]));
+samples = [];
+for ii=1:length(pts)
+  
+end
+
 % hyperbolic
-net.layer{1}.w=rand([hsize,D])*.1;
-net.layer{1}.bias=0;
+net.layer{1}.Wih=rand([hsize,D])*.1; % for current input 
+net.layer{1}.Whh=rand([hsize,D])*.1; % for previous activation
+net.layer{1}.Whk=rand([hsize,hsize])*.1; % for output
 % logistic
 net.layer{2}.w=rand([2,hsize])*.1;
-net.layer{2}.bias=0;
 
 errors=[];
 for iter=1:maxiter
-net.layer{1}.forward = @(x) tanh(net.layer{1}.w*x+net.layer{1}.bias);
-net.layer{2}.forward = @(x) 1./(1+exp(-(net.layer{2}.w*x+net.layer{2}.bias)));
 % forward pass
-h = net.layer{1}.forward(X');
-b = net.layer{2}.forward(h); 
+b0 = zeros([D,1]);
+b1 = tanh(net.layer{1}.Wih*x+net.layer{1}.hh*b0);
+b2 = 1./(1+exp(-(net.layer{2}.w*x+net.layer{2}.bias)));
 % backward pass
 net.layer{2}.delta = b.*(1-b).*([Y';1-Y']-b);
 net.layer{1}.delta = (1-h.*h).*(net.layer{2}.w'*net.layer{2}.delta);
